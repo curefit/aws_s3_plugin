@@ -30,6 +30,16 @@ public class SwiftAwsS3Plugin: NSObject, FlutterPlugin {
             }
   }
 
+   private func decideACL(_ acl: String) -> AWSRegionType {
+       let acl: String = (region as AnyObject).replacingOccurrences(of: "ACL.", with: "")
+        switch acl {
+           case "UNKNOWN":
+                return AWSS3ObjectCannedACL.unknown
+            case "PUBLIC_READ"
+                return AWSS3ObjectCannedACL.publicRead
+           }
+}
+
    private func decideRegion(_ region: String) -> AWSRegionType {
        let reg: String = (region as AnyObject).replacingOccurrences(of: "Regions.", with: "")
        switch reg {
@@ -87,7 +97,7 @@ public class SwiftAwsS3Plugin: NSObject, FlutterPlugin {
         let argsMap = args as! NSDictionary
        if let filePath = argsMap["filePath"], let awsFolder = argsMap["awsFolder"],
            let fileNameWithExt = argsMap["fileNameWithExt"], let poolId = argsMap["poolId"],
-           let bucketName = argsMap["bucketName"], let region = argsMap["region"] {
+           let bucketName = argsMap["bucketName"], let region = argsMap["region"], let acl = argsMap["acl"] {
             
            let convertedRegion = decideRegion(region as! String)
            let credentialsProvider = AWSCognitoCredentialsProvider(regionType: convertedRegion, identityPoolId: poolId as! String)
@@ -109,7 +119,7 @@ public class SwiftAwsS3Plugin: NSObject, FlutterPlugin {
 
           uploadRequest.bucket = bucketName as? String
           uploadRequest.contentType = "\(fileType)"
-          uploadRequest.acl = .publicReadWrite
+          uploadRequest.acl = decideACL(acl as! String)
           uploadRequest.uploadProgress = { (bytesSent, totalBytesSent,
               totalBytesExpectedToSend) -> Void in
               DispatchQueue.main.async(execute: {

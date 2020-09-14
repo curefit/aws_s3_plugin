@@ -5,14 +5,14 @@ version: 0.1.1+hotfix.3
 homepage: "https://github.com/blasanka/aws_s3_plugin"
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  flutter_test:
+  flutter:
     sdk: flutter
 
 # For information on the generic Dart part of this file, see the

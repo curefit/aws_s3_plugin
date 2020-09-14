@@ -5,15 +5,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 class AwsS3 {
-
   final File file;
   final String fileNameWithExt;
   final String awsFolderPath;
   final String poolId;
   final Regions region;
   final String bucketName;
+  final ACL acl;
 
   AwsS3({
+    @required this.acl,
     @required this.file,
     @required this.fileNameWithExt,
     @required this.awsFolderPath,
@@ -37,7 +38,7 @@ class AwsS3 {
     args.putIfAbsent("transPoolId", () => "");
     args.putIfAbsent("region", () => region.toString());
     args.putIfAbsent("bucketName", () => bucketName);
-
+    args.putIfAbsent("acl", () => acl);
     debugPrint("AwsS3Plugin: file path is: ${file.path}");
 
     final String result = await _channel.invokeMethod('uploadToS3', args);
@@ -48,6 +49,8 @@ class AwsS3 {
   Stream get getUploadStatus => _eventChannel.receiveBroadcastStream();
 }
 
+enum ACL { UNKNOWN, PUBLIC_READ, PUBLIC_READ_WRITE }
+
 /// Enumeration of region names
 enum Regions {
   GovCloud,
@@ -55,7 +58,9 @@ enum Regions {
   US_EAST_1,
   US_EAST_2,
   US_WEST_1,
-  US_WEST_2, ///Default: The default region of AWS Android SDK
+  US_WEST_2,
+
+  ///Default: The default region of AWS Android SDK
   EU_WEST_1,
   EU_WEST_2,
   EU_WEST_3,
