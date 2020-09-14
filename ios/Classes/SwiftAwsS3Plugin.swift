@@ -33,10 +33,10 @@ public class SwiftAwsS3Plugin: NSObject, FlutterPlugin {
    private func decideACL(_ acl: String) -> AWSS3ObjectCannedACL {
        let acl: String = (acl as AnyObject).replacingOccurrences(of: "ACL.", with: "")
         switch acl {
-           default:
-                return AWSS3ObjectCannedACL.unknown
         case "PUBLIC_READ":
                 return AWSS3ObjectCannedACL.publicRead
+        default:
+                return AWSS3ObjectCannedACL.unknown
            }
 }
 
