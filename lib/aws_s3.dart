@@ -38,7 +38,7 @@ class AwsS3 {
     args.putIfAbsent("transPoolId", () => "");
     args.putIfAbsent("region", () => region.toString());
     args.putIfAbsent("bucketName", () => bucketName);
-    args.putIfAbsent("acl", () => acl);
+    args.putIfAbsent("acl", () => acl.toString());
     debugPrint("AwsS3Plugin: file path is: ${file.path}");
 
     final String result = await _channel.invokeMethod('uploadToS3', args);
